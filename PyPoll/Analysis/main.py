@@ -1,57 +1,69 @@
-#import dependencies
-import csv
+# Import Modules
+#I did not submit this homework because I could not get it to print the 
+#exact information like the example homework no matter what I tried.
+
 import os
+import csv
 
-#declare a variable and read the csv file
+#Read the csv file
 csv_path = "../Resources/election_data.csv"
-
-#initialize a total vote counter
-vote_total = 0
-
-#create a dictionary for votes
-number_votes = {}
-
-#declare variables to keep track of the winner, the vote count and the percentage of vote
-Winner = ""
-vote_count = 0
-vote_percentage = 0
-
-#open the csv file  and read the file
-with open(csv_path, encoding='utf-8') as election_dataset:
-    csvreader = csv.reader(csv_path, delimiter=",")
-    
-    #count the rows in the csv file
-    for row in csvreader:
-        vote_total += 1
-        #get the candidate's name
-        candidates = row["Candidate"]
-        #add a vote to candidate's count
-        number_votes[candidates] =number_votes[candidates]+ 1
-
-        #this should get the winner
-    for candidate in number_votes:
-        votes = number_votes.get(candidate)
-        vote_percentage = float(votes) / float(vote_total) * 100
-
-        #determine the winner
-        if (votes > vote_count):
-            vote_count = votes
-            Winner = candidate
-
-        #print each candidate's vote count and percentage and the election results
-        print(f"Election Results")
-        print(f"---------------------------\n")
-        print(f"Total Votes: {vote_total}\n")
-        print(f"-----------------------------\n")
-        summary = f"{candidate}: {vote_percentage:.3f}% ({votes})\n"
-        print(summary, end="")
-        print(f"-----------------------------------\n")
-        print(f"Winner: {Winner}\n")
-        print(f"----------------------------------\n")
                
-# I have tried everything and even submitting late but can't get anything to work.
+with open(csv_path) as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter = ",")
+    csv_header = next(csv_file)
+    
+
+#Declare Variables
+    num_votes=0
+    total_votes=0
+    candidates=[]
+    number_won = {}
+    percent_won=0
+    winner=""
+    winner_votes=0
   
+#The total number of votes cast
+    for row in csv_reader:
+        num_votes +=1
+    
+#get a list of candidates who received votes
+#The total number of votes each candidate won
+        if row[2] not in candidates:
+            candidates.append(row[2])
+            number_won[row[2]]=0
+        number_won[row[2]]+=1
+        
 
+#The percentage of votes each candidate won
+for name in number_won:
+    votes = number_won[name]
+    percentage = votes / num_votes
+    percent = percentage * 100
 
+#The winner of the election based on popular vote.
+    if votes > winner_votes: 
+        winner_votes = votes
+        winner = name
 
+#Print to terminal
+print(f"Election Results")
+print(f"-------------------------")
+print(f"Total Votes: {num_votes}")
+print(f"-------------------------")
+print(f"{name}: {percent:.3f}% ({votes})")
+print(f"-------------------------")
+print(f"Winner: {winner}")
+print(f"-------------------------")
+
+#write to outut file
+results_file = os.path.join("Output", "Election_data.txt")
+with open(results_file, "w") as outfile:
+
+    outfile.write(f"Election Results\n")
+    outfile.write(f"-------------------------\n")
+    outfile.write(f"Total Votes: {num_votes}\n")
+    outfile.write(f"-------------------------\n")
+    outfile.write(f"{name}: {percent:.3f}% ({votes})\n")
+    outfile.write(f"Winner: {winner}\n")
+    outfile.write(f"-------------------------\n")
 
